@@ -53,10 +53,11 @@
   transform: translate3d(0,0,0);
   /* smooth transitions for glow/scale */
   transition:
-    transform 360ms cubic-bezier(0.2, 0.85, 0.24, 1),
-    box-shadow 420ms cubic-bezier(0.2, 0.85, 0.24, 1),
-    filter 420ms cubic-bezier(0.2, 0.85, 0.24, 1),
-    opacity 180ms ease-in-out;
+    transform 320ms cubic-bezier(0.2, 0.85, 0.24, 1),
+    box-shadow 320ms cubic-bezier(0.2, 0.85, 0.24, 1),
+    opacity 160ms ease-in-out;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Soft underlay to mask the grid and add depth */
@@ -89,7 +90,7 @@
 
 /* Glow animation states use keyframes defined below */
 .tag--entering {
-  animation: tag-enter 900ms cubic-bezier(.0,0,.2,1) forwards;
+  animation: tag-enter 1000ms cubic-bezier(.0,0,.2,1) forwards;
 }
 
 .tag--glow-in {
@@ -97,11 +98,21 @@
 }
 
 .tag--glowing {
-  filter: brightness(1.12) saturate(1.06);
+  /* remove filter to avoid text fuzziness */
+  filter: none;
   box-shadow:
-    0 1.0em 2.4em rgba(0,123,167,0.20),
-    0 0.2em 0.5em rgba(0,123,167,0.10);
-  transform: scale(1.03);
+    /* 1) dark drop shadow (offset Y, blur, alpha) */
+    0 1.5em 1.6em rgba(0,0,0,0.1),
+
+    /* 2) soft colored glow under pill for depth (small blur) */
+    0 0.22em 0.9em rgba(0,123,167,0.02),
+
+    /* 3) crisp ring (blur 0) — a sharp halo edge */
+    0 0 0 0.10em rgba(170, 211, 226, 0.02);
+
+  /* keep text crisp: very tiny text-shadow (optional) or none */
+  text-shadow: 0 0 0 rgba(0,0,0,0); /* no blur on text */
+  transform: translate3d(0, -0.10em, 0) scale(1.03);
 }
 
 .tag--glow-out {
@@ -109,7 +120,7 @@
 }
 
 .tag--exiting {
-  animation: tag-exit 300ms cubic-bezier(.4,0,1,1) forwards;
+  animation: tag-exit 700ms cubic-bezier(.4,0,1,1) forwards;
   filter: saturate(0.95);
 }
 
@@ -117,11 +128,11 @@
 @keyframes tag-enter {
   0% {
     opacity: 0;
-    transform: translate3d(0, 1.4em, 0) scale(0.96);
+    transform: translate3d(0, 1.6em, 0) scale(0.96);
   }
   60% {
     opacity: 1;
-    transform: translate3d(0, -0.12em, 0) scale(1.03);
+    transform: translate3d(0, -0.18em, 0) scale(1.035);
   }
   100% {
     transform: translate3d(0, 0, 0) scale(1);
@@ -135,27 +146,35 @@
     filter: brightness(1) saturate(1);
   }
   45% {
-    transform: scale(1.015);
-    box-shadow: 0 0.5em 1.0em rgba(0,123,167,0.10);
-    filter: brightness(1.06) saturate(1.03);
+    transform: scale(1.01);
+    box-shadow:
+      0 0.30em 0.70em rgba(0,123,167,0.05),
+      0 0.15em 0.45em rgba(0,123,167,0.03);
+    filter: brightness(1.03) saturate(1.02);
   }
   80% {
-    transform: scale(1.025);
-    box-shadow: 0 0.85em 1.8em rgba(0,123,167,0.14);
-    filter: brightness(1.10) saturate(1.04);
+    transform: scale(1.015);
+    box-shadow:
+      0 0.45em 0.95em rgba(0,123,167,0.06),
+      0 0.18em 0.55em rgba(0,123,167,0.04);
+    filter: brightness(1.04) saturate(1.03);
   }
   100% {
-    transform: scale(1.03);
-    box-shadow: 0 1.0em 2.4em rgba(0,123,167,0.16);
-    filter: brightness(1.12) saturate(1.06);
+    transform: scale(1.02);
+    box-shadow:
+      0 0.55em 1.2em rgba(0,123,167,0.07),
+      0 0.20em 0.55em rgba(0,123,167,0.05);
+    filter: brightness(1.04) saturate(1.03);
   }
 }
 
 @keyframes tag-glow-out {
   0% {
-    transform: scale(1.03);
-    box-shadow: 0 1.0em 2.6em rgba(0,123,167,0.16);
-    filter: brightness(1.12) saturate(1.06);
+    transform: scale(1.02);
+    box-shadow:
+      0 0.55em 1.2em rgba(0,123,167,0.07),
+      0 0.20em 0.55em rgba(0,123,167,0.05);
+    filter: brightness(1.04) saturate(1.03);
   }
   100% {
     transform: scale(1);
@@ -164,21 +183,30 @@
   }
 }
 
+/* === exit animation (fade + scale) using EM === */
 @keyframes tag-exit {
-  0% {
-    transform: scale(1.03);
-    box-shadow: 0 1.0em 2.4em rgba(0,123,167,0.16);
-    filter: brightness(1.12) saturate(1.06);
+ 0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1); /* start at center */
+    box-shadow: 0 0.55em 1.2em rgba(0,123,167,0.07), 0 0.20em 0.55em rgba(0,123,167,0.05);
   }
-  45% {
-    transform: scale(1.02);
-    box-shadow: 0 0.7em 1.4em rgba(0,123,167,0.10);
-    filter: brightness(1.07) saturate(1.03);
+  30% {
+    /* start to move upward and keep a slight scale */
+    opacity: 0.95;
+    transform: translate3d(0, -0.6em, 0) scale(1.02);
+    box-shadow: 0 0.45em 1.0em rgba(0,123,167,0.06), 0 0.18em 0.45em rgba(0,123,167,0.04);
+  }
+  70% {
+    /* accelerate upwards and reduce shadow */
+    opacity: 0.6;
+    transform: translate3d(0, -1.05em, 0) scale(1.01);
+    box-shadow: 0 0.25em 0.6em rgba(0,123,167,0.03), 0 0.12em 0.3em rgba(0,123,167,0.02);
   }
   100% {
-    transform: scale(1);
+    /* finish above and invisible */
+    opacity: 0;
+    transform: translate3d(0, -1.6em, 0) scale(1);
     box-shadow: 0 0 0 rgba(0,123,167,0);
-    filter: brightness(1) saturate(1);
   }
 }
 
