@@ -9,12 +9,12 @@ const TOKENS = [
 ];
 
 const TIMING = {
-  ENTER: 900,
+  ENTER: 1000,
   HOLD: 1800,
   GLOW_IN: 360,
   GLOW_OUT: 500,
-  EXIT: 900,
-  DESATURATE: 900,
+  EXIT: 700,
+  DESATURATE: 1000,
 };
 
 let currentIndex = 0;
