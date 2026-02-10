@@ -1,91 +1,100 @@
-// Tokens and timing (copied from TSX)
+// Tokens
 const TOKENS = [
   "Structured Thinking",
   "Intuitive UX",
   "Systems-Oriented",
-  "Clear Interactions",
+  "Interactions & Flows",
   "Detail-Oriented",
-  "Problem Solver",
+  "Design Systems",
+  "Visual Hierarchy",
+  "UI Clarity",
 ];
 
+// Timing (tuned for smoothness)
 const TIMING = {
-  ENTER: 1000,
+  ENTER: 800,
   HOLD: 1800,
   GLOW_IN: 360,
-  GLOW_OUT: 500,
-  EXIT: 700,
-  DESATURATE: 1000,
+  EXIT: 1000,
 };
 
 let currentIndex = 0;
 let timeouts = [];
 
 const tokenEl = document.getElementById("token");
-const gridBg = document.getElementById("gridBg");
 
 function clearTimeouts() {
-  timeouts.forEach(t => clearTimeout(t));
+  timeouts.forEach(clearTimeout);
   timeouts = [];
 }
 
 function setPhase(phase) {
-  tokenEl.className = "tag";
+  tokenEl.classList.remove(
+    "tag--idle",
+    "tag--active",
+    "tag--entering",
+    "tag--glow-in",
+    "tag--glowing",
+    "tag--exiting"
+  );
+
   switch (phase) {
+    case "idle":
+      tokenEl.classList.add("tag--idle");
+      break;
+
     case "enter":
       tokenEl.classList.add("tag--entering");
       break;
-    case "hold-glow-in":
-      tokenEl.classList.add("tag--active", "tag--glow-in");
-      break;
-    case "hold":
+
+    case "glow":
       tokenEl.classList.add("tag--active", "tag--glowing");
       break;
-    case "hold-glow-out":
-      tokenEl.classList.add("tag--active", "tag--glow-out");
-      break;
+
     case "exit":
       tokenEl.classList.add("tag--exiting");
       break;
-    default:
-      tokenEl.classList.add("tag--idle");
   }
 }
 
 function runCycle() {
   clearTimeouts();
+
+  // Set text
   tokenEl.textContent = TOKENS[currentIndex];
 
-  // ENTER
-  setPhase("enter");
-  timeouts.push(setTimeout(() => {
-    // GLOW-IN
-    setPhase("hold-glow-in");
-    timeouts.push(setTimeout(() => {
-      // HOLD
-      setPhase("hold");
-      timeouts.push(setTimeout(() => {
-        // GLOW-OUT
-        setPhase("hold-glow-out");
-        timeouts.push(setTimeout(() => {
-          // EXIT
-          setPhase("exit");
-          gridBg.classList.add("bg-dim");
+  // Reset to idle (below view)
+  setPhase("idle");
 
-          // After exit → next token → restart cycle
+  // Let browser register idle state
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+
+      // ENTER
+      setPhase("enter");
+
+      timeouts.push(setTimeout(() => {
+        // GLOW / HOLD (no shadow)
+        setPhase("glow");
+
+        timeouts.push(setTimeout(() => {
+          // EXIT — ONE continuous animation
+          setPhase("exit");
+
           timeouts.push(setTimeout(() => {
-            gridBg.classList.remove("bg-dim");
             currentIndex = (currentIndex + 1) % TOKENS.length;
             runCycle();
           }, TIMING.EXIT));
 
-        }, TIMING.GLOW_OUT));
-      }, TIMING.HOLD - TIMING.GLOW_IN - TIMING.GLOW_OUT));
-    }, TIMING.GLOW_IN));
-  }, TIMING.ENTER));
+        }, TIMING.HOLD));
+
+      }, TIMING.ENTER + TIMING.GLOW_IN));
+
+    });
+  });
 }
 
-// initial delay like TSX
+// Initial delay
 timeouts.push(setTimeout(runCycle, 300));
 
 window.addEventListener("beforeunload", clearTimeouts);
-
