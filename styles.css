@@ -107,11 +107,11 @@ html, body {
   background:
     radial-gradient(
       ellipse 120% 150% at center,
-      rgba(0, 180, 230, 0.2) 0%,
-      rgba(0, 160, 210, 0.14) 20%,
-      rgba(0, 140, 190, 0.09) 40%,
-      rgba(0, 120, 170, 0.05) 60%,
-      rgba(0, 100, 150, 0.02) 80%,
+      rgba(0, 180, 230, 0.15) 0%,
+      rgba(0, 160, 210, 0.10) 20%,
+      rgba(0, 140, 190, 0.06) 40%,
+      rgba(0, 120, 170, 0.03) 60%,
+      rgba(0, 100, 150, 0.01) 80%,
       transparent 100%
     );
 
@@ -152,14 +152,14 @@ html, body {
 }
 
 .tag--glowing {
-  filter: drop-shadow(0 4px 30px rgba(0, 160, 210, 0.18))
-          drop-shadow(0 8px 60px rgba(0, 140, 190, 0.1))
-          drop-shadow(0 12px 90px rgba(0, 120, 170, 0.06));
+  filter: drop-shadow(0 4px 30px rgba(0, 160, 210, 0.12))
+          drop-shadow(0 8px 60px rgba(0, 140, 190, 0.07))
+          drop-shadow(0 12px 90px rgba(0, 120, 170, 0.04));
   box-shadow:
-    0 4px 40px rgba(0, 160, 210, 0.12),
-    0 8px 80px rgba(0, 140, 190, 0.08),
-    0 12px 120px rgba(0, 120, 170, 0.04),
-    inset 0 1px 20px rgba(0, 180, 230, 0.06);
+    0 4px 40px rgba(0, 160, 210, 0.08),
+    0 8px 80px rgba(0, 140, 190, 0.05),
+    0 12px 120px rgba(0, 120, 170, 0.03),
+    inset 0 1px 20px rgba(0, 180, 230, 0.04);
    animation: tag-glow-breathe 3s ease-in-out infinite;
   transition: filter 0.4s cubic-bezier(0.22, 0.61, 0.36, 1),
               box-shadow 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -304,11 +304,11 @@ html, body {
   .tag--idle { transform: translate3d(0, 1em, 0); }
   
   .tag--glowing {
-    filter: drop-shadow(0 0 15px rgba(0, 180, 230, 0.3))
-            drop-shadow(0 0 30px rgba(0, 160, 210, 0.2));
+    filter: drop-shadow(0 0 15px rgba(0, 180, 230, 0.15))
+            drop-shadow(0 0 30px rgba(0, 160, 210, 0.1));
     box-shadow:
-      0 0 25px rgba(0, 180, 230, 0.2),
-      0 0 50px rgba(0, 160, 210, 0.12);
+      0 0 25px rgba(0, 180, 230, 0.12),
+      0 0 50px rgba(0, 160, 210, 0.08);
   }
 }
 
