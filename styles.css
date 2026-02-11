@@ -61,8 +61,8 @@ html, body {
 .tag {
   position: relative;
   font-size: clamp(16px, 2vw, 22px);
-  padding: 1.5em 3.8em;
-  border-radius: 4em;
+  padding: clamp(0.85em, 1.5vw, 1.2em) clamp(2em, 4vw, 2.8em);
+  border-radius: 2em;
   background-color: rgba(138, 196, 218, 0.5);
   color: #282626;
   font-family: "Noto Sans", sans-serif;
@@ -99,7 +99,7 @@ html, body {
 .tag::after {
   content: "";
   position: absolute;
-  inset: -12px -8px;
+  inset: -0.6em -0.4em;
   border-radius: inherit;
   pointer-events: none;
   
@@ -125,9 +125,9 @@ html, body {
   -webkit-mask-composite: xor;
   mask-composite: exclude;
 
-  padding: 3px;
+  padding: 0.15em;
   opacity: 0;
-  filter: blur(6px);
+  filter: blur(0.3em);
 }
 
 /* Idle / translated state */
@@ -244,11 +244,11 @@ html, body {
 @keyframes tag-border-pulse {
   0%, 100% {
     opacity: 1;
-    filter: blur(6px);
+    filter: blur(0.3em);
   }
   50% {
     opacity: 0.7;
-    filter: blur(7px);
+    filter: blur(0.35em);
   }
 }
 
@@ -286,15 +286,21 @@ html, body {
   }
 }
 
-/* Tablet adjustments */
-@media (max-width: 768px) {
-  .tag { padding: 0.55em 1em; }
+/* Tablet adjustments (481px - 768px) */
+@media (max-width: 768px) and (min-width: 481px) {
+  .tag { 
+    font-size: 19px; /* Fixed size for tablet range */
+    padding: 0.85em 2.4em; /* Good proportions */
+  }
 }
 
 /* Mobile adjustments */
 @media (max-width: 480px) {
   .hero-grid-wrap { min-height: 500px; }
-  .tag { padding: 0.8em 1.8em; }
+  .tag { 
+    font-size: 17px; /* Fixed size for mobile */
+    padding: 0.8em 1.8em; 
+  }
   .tag--idle { transform: translate3d(0, 1em, 0); }
   
   .tag--glowing {
